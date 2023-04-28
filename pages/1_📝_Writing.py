@@ -14,9 +14,7 @@ openai.api_key = "<YOUR_OPENAI_API_KEY>"
 
 # Title
 st.title('📝 Writing AI Tutor')
-st.markdown("<p style='text-align: left;'> 👩🏽 Hello! My name is Ari, I am your personal writing learning assistant. Ask me any questions if you need help on writing assignments! </p>", unsafe_allow_html=True)
-
-
+st.markdown("<p style='text-align: left;'> Hello! My name is Ari, I am your personal writing learning assistant. Ask me any questions if you need help on writing assignments! </p>", unsafe_allow_html=True)
 
 
 # Initialise session state variables
