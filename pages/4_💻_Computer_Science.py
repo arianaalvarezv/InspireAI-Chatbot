@@ -10,7 +10,7 @@ st.set_page_config(page_title='Computer Science - InspireAI', page_icon='💡', 
 # st.markdown("<h1 style='text-align: center;'>InspireAI - Your personal tutor ChatBot 💡</h1>", unsafe_allow_html=True)
 
 # Set API key
-openai.api_key = "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"
+openai.api_key = "<OPENAI_API_KEY>"
 
 # Title
 st.title('💻 Computer Science AI Tutor')
