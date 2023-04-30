@@ -4,18 +4,44 @@ import math
 import pandas as pd
 import streamlit as st
 from streamlit_chat import message
+import PyPDF2 #for pdfs
 
 # Config
 st.set_page_config(page_title='Writing - InspireAI', page_icon='💡', layout='wide')
 
 # Set org ID and API key
 # openai.organization = "<YOUR_OPENAI_ORG_ID>"
-openai.api_key = "<YOUR_OPENAI_API_KEY>"
+openai.api_key = "<YOUR_OPENAI_API_KEY"
 
 # Title
 st.title('📝 Writing AI Tutor')
 st.markdown("<p style='text-align: left;'> Hello! My name is Ari, I am your personal writing learning assistant. Ask me any questions if you need help on writing assignments! </p>", unsafe_allow_html=True)
 
+#upload pdf
+text=""
+answerbasedontext=""
+# Create file uploader widget
+uploaded_file = st.file_uploader('Choose your .pdf file', type="pdf")
+# If file is uploaded, extract text
+if uploaded_file is not None:
+    # Create PDF reader object
+    pdf_reader = PyPDF2.PdfReader(uploaded_file)
+    # Extract text from each page and concatenate into a single string
+    i=0
+    for page in range(len(pdf_reader.pages)):
+        text += pdf_reader.pages[i].extract_text()
+        i=i+1
+    answerbasedontext=text+"Base your answers on the text above"
+    # Test: Display the extracted text in the Streamlit app
+    #st.write(text)
+    
+#checkbox for adding pdf text to the prompt   
+#basedontext = st.checkbox('Answer based on uploaded PDF file above')
+#if basedontext:
+    #st.write('好的！')
+    #answerbasedontext=text+"Base your answers on the text above"
+#else:
+     #answerbasedontext=""
 
 # Initialise session state variables
 if 'generated' not in st.session_state:
@@ -24,7 +50,7 @@ if 'past' not in st.session_state:
     st.session_state['past'] = []
 if 'messages' not in st.session_state:
     st.session_state['messages'] = [
-        # {"role": "system", "content": "You are a helpful assistant."}
+        # {"role": "system", "content": "You are a helpful assistant. Base your answers on text below"+text}
         {"role": "system", "content": "You are a helpful Writing tutor. Helping students when they are stuck on an assignment. You ask them questions instead of giving them solutions to help guide their thinking."}
     ]
 if 'model_name' not in st.session_state:
@@ -94,7 +120,7 @@ with container:
         submit_button = st.form_submit_button(label='Send')
 
     if submit_button and user_input:
-        output, total_tokens, prompt_tokens, completion_tokens = generate_response(user_input)
+        output, total_tokens, prompt_tokens, completion_tokens = generate_response(answerbasedontext+user_input)
         st.session_state['past'].append(user_input)
         st.session_state['generated'].append(output)
         st.session_state['model_name'].append(model_name)
